@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "classpath:.",
         glue = "classpath:daggerok",
-        // plugin = "html:target/cucumber"
         plugin = {
                 "html:build/cucumber/report.html",
                 "json:build/cucumber/report.json"
