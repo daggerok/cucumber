@@ -8,7 +8,7 @@ env:
 script:
   - mvn clean package
   - gradle clean build
-  - bash gradlew --stop
+  - gradle --stop
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
