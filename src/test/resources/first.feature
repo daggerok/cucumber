@@ -5,8 +5,8 @@ Feature: First feature
   Scenario: First scenario
 #cucumber-java8
     When I opened an urls:
-      | "https://ya.ru/"          |
-      | "https://www.rambler.ru/" |
+      | https://ya.ru/          |
+      | https://www.rambler.ru/ |
     Then I see search elements:
       | span#input__box     |
       | input#search_query  |

@@ -56,10 +56,9 @@ import static java.util.concurrent.TimeUnit.SECONDS
 def config() {
   def configuration = new Configuration(buildDir, project.name)
   // optional configuration
-  configuration.setParallelTesting(false)
-  configuration.setRunWithJenkins(false)
-  configuration.setBuildNumber(project.version)
-  // addidtional metadata presented on main page
+  configuration.setRunWithJenkins false
+  configuration.setParallelTesting false
+  configuration.setBuildNumber project.version
   configuration.addClassifications("Platform", System.getProperty("os.name"))
   configuration.addClassifications("Branch", "master")
   configuration
@@ -76,14 +75,8 @@ def generateReport() {
 
 test.doLast {
 
-  println 'waiting for cucumber reports json files...'
+  println 'waiting 2 sec. for cucumber reports json files...'
   SECONDS.sleep(2)
 
   generateReport()
 }
-
-/*
-task reports() {
-  generateReport()
-}
-*/
