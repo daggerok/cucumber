@@ -1,0 +1,89 @@
+buildscript {
+  ext {
+    cucumberReportingVersion = '3.5.1'
+  }
+  repositories {
+    mavenCentral()
+    maven { url "http://repo.bodar.com" }
+  }
+
+  dependencies {
+    classpath 'org.codehaus.gpars:gpars:1.2.1',
+        "net.masterthought:cucumber-reporting:$cucumberReportingVersion"
+  }
+}
+
+plugins {
+  id 'java'
+  id 'maven'
+  id 'nebula.provided-base' version '3.1.0'
+  id 'nebula.optional-base' version '3.1.0'
+}
+
+group = 'daggerok'
+version = '0.0.1'
+description = 'cucumber-java-idea'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
+}
+
+repositories {
+  jcenter()
+  maven { url 'http://repo.maven.apache.org/maven2' }
+}
+
+dependencies {
+
+  compile "net.masterthought:cucumber-reporting:$cucumberReportingVersion"
+
+  testCompile 'junit:junit:4.12',
+      'info.cukes:cucumber-java:1.2.5',
+      'info.cukes:cucumber-java8:1.2.5',
+      'info.cukes:cucumber-picocontainer:1.2.5',
+      'info.cukes:cucumber-junit:1.2.5',
+      'org.seleniumhq.selenium:selenium-java:2.53.0'
+}
+
+import net.masterthought.cucumber.Configuration
+import net.masterthought.cucumber.ReportBuilder
+
+import static java.util.concurrent.TimeUnit.SECONDS
+
+def config() {
+  def configuration = new Configuration(buildDir, project.name)
+  // optional configuration
+  configuration.setParallelTesting(false)
+  configuration.setRunWithJenkins(false)
+  configuration.setBuildNumber(project.version)
+  // addidtional metadata presented on main page
+  configuration.addClassifications("Platform", System.getProperty("os.name"))
+  configuration.addClassifications("Branch", "master")
+  configuration
+}
+
+def generateReport() {
+
+  def reports = fileTree(dir: buildDir.absolutePath + '/cucumber/').include('**/*.json')
+  def paths = reports.collect { File file -> file.absolutePath }
+
+  new ReportBuilder(paths, config()).generateReports()
+  println "\nuse report: $buildDir/cucumber-html-reports/overview-features.html"
+}
+
+test.doLast {
+
+  println 'waiting for cucumber reports json files...'
+  SECONDS.sleep(2)
+
+  generateReport()
+}
+
+/*
+task reports() {
+  generateReport()
+}
+*/
